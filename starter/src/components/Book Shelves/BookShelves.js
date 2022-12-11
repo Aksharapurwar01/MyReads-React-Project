@@ -3,12 +3,14 @@ import "../../App.css";
 import { Link } from "react-router-dom";
 import BookShelf from "./BookShelf";
 
-export default function BookShelves() {
+export default function BookShelves({books}) {
+    
   const Bookshelves = [
     { name: "Currently Reading", value: "currentlyReading" },
     { name: "Want To Read", value: "wantToRead" },
     { name: "Read", value: "read" },
   ];
+
   return (
     <>
       <div className="list-books">
@@ -22,6 +24,7 @@ export default function BookShelves() {
                 <BookShelf
                   key={shelf.value}
                   shelf={shelf}
+                  books={books}
                 />
               );
             })}
