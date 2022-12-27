@@ -1,7 +1,16 @@
 import React from "react";
 import Dropdown from "../Dropdown/Dropdown";
+import * as BooksAPI from "../../BooksAPI";
 
-export default function Book({ book }) {
+export default function Book({ book, updateBookShelf }) {
+  const updateShelf = (newShelf) => {
+    const updateBookDetails = async () => {
+      await BooksAPI.update(book, newShelf);
+      updateBookShelf(book, newShelf);
+    };
+    updateBookDetails();
+  };
+
   return (
     <div>
       <li>
@@ -17,7 +26,10 @@ export default function Book({ book }) {
                 }")`,
               }}
             ></div>
-            <Dropdown/>
+            <Dropdown
+              booksCategory={book.shelf === undefined ? "none" : book.shelf}
+              onChangeShelf={(newShelf) => updateShelf(newShelf)}
+            />
           </div>
           <div className="book-title">{book.title}</div>
           <div className="book-authors">{book.authors.join(", ")}</div>
