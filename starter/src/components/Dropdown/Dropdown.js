@@ -1,9 +1,9 @@
 import React from "react";
+import { PropTypes } from "prop-types";
 
 export default function Dropdown({ booksCategory, onChangeShelf }) {
   const changeShelf = (newShelf) => {
     if (onChangeShelf) {
-      console.log(newShelf, "newShelf");
       onChangeShelf(newShelf);
     }
   };
@@ -27,3 +27,8 @@ export default function Dropdown({ booksCategory, onChangeShelf }) {
     </div>
   );
 }
+
+Dropdown.propTypes = {
+  booksCategory: PropTypes.string.isRequired,
+  onChangeShelf: PropTypes.func.isRequired,
+};

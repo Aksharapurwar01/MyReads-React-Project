@@ -1,6 +1,7 @@
 import React from "react";
 import Dropdown from "../Dropdown/Dropdown";
 import * as BooksAPI from "../../BooksAPI";
+import { PropTypes } from "prop-types";
 
 export default function Book({ book, updateBookShelf }) {
   const updateShelf = (newShelf) => {
@@ -32,9 +33,16 @@ export default function Book({ book, updateBookShelf }) {
             />
           </div>
           <div className="book-title">{book.title}</div>
-          <div className="book-authors">{book.authors.join(", ")}</div>
+          <div className="book-authors">
+            {book && book.authors && book.authors.join(",")}
+          </div>
         </div>
       </li>
     </div>
   );
 }
+
+Book.propTypes = {
+  book: PropTypes.object.isRequired,
+  updateBookShelf: PropTypes.func.isRequired,
+};

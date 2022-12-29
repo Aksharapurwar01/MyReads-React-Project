@@ -2,6 +2,7 @@ import React from "react";
 import "../../App.css";
 import { Link } from "react-router-dom";
 import BookShelf from "./BookShelf";
+import { PropTypes } from "prop-types";
 
 export default function BookShelves({ books, updateBookShelf }) {
   const Bookshelves = [
@@ -39,3 +40,8 @@ export default function BookShelves({ books, updateBookShelf }) {
     </>
   );
 }
+
+BookShelves.propTypes = {
+  books: PropTypes.array.isRequired,
+  updateBookShelf: PropTypes.func.isRequired,
+};

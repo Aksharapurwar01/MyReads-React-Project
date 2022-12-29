@@ -1,5 +1,6 @@
 import React from "react";
 import Book from "../Book/Book";
+import { PropTypes } from "prop-types";
 
 export default function BookShelf({ shelf, books, updateBookShelf }) {
   const filterBooks = books.filter((book) => {
@@ -29,3 +30,9 @@ export default function BookShelf({ shelf, books, updateBookShelf }) {
     </div>
   );
 }
+
+BookShelf.propTypes = {
+  books: PropTypes.array.isRequired,
+  updateBookShelf: PropTypes.func.isRequired,
+  shelf: PropTypes.object.isRequired,
+};

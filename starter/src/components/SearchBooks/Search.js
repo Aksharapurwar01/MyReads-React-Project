@@ -3,28 +3,58 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import * as BooksAPI from "../../BooksAPI";
 import Book from "../Book/Book";
+import { PropTypes } from "prop-types";
 
 export default function Search({ books, updateBookShelf }) {
-  const [search, setsearch] = useState('');
-    const [searchedBook, setsearchedBook] = useState([])
-    const searchBooks = (value) => {
-        setsearch(value);
-        if(value.length>0){
-            BooksAPI.search(value).then((data)=>{
-                if(data.error){
-                    setsearchedBook([]);
-                }else{
-                    setsearchedBook(data)
-                }
-            }).catch((error)=>{
-                console.log("error",error)
-            })
-        }else{
-            setsearchedBook([])
-        }
-    }
+  const [search, setSearch] = useState("");
+  const [searchedBook, setSearchedBook] = useState([]);
 
+  const updateBookCategory = (book, newShelf) => {
+    const updateBook = () => {
+      const id = searchedBook.findIndex((searchedBook) => {
+        return searchedBook.id === book.id;
+      });
+      if (id >= 0) {
+        let updatedBooks = [...searchedBook];
+        updatedBooks[id].shelf = newShelf;
+        updateBookShelf(book, newShelf);
+        setSearchedBook(updatedBooks);
+      }
+    };
+    updateBook();
+  };
 
+  useEffect(() => {
+    const searchBooks = () => {
+      if (search.trim().length > 0) {
+        BooksAPI.search(search, 100)
+          .then((data) => {
+            if (data.error) {
+              setSearchedBook([]);
+            } else {
+              if (data.length) {
+                data.forEach((book) => {
+                  books.forEach((shelfBook) => {
+                    if (book.id === shelfBook.id) {
+                      book["shelf"] = shelfBook.shelf;
+                    }
+                  });
+                });
+                setSearchedBook(data);
+              } else {
+                setSearchedBook([]);
+              }
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        setSearchedBook([]);
+      }
+    };
+    searchBooks();
+  }, [search, books]);
 
   return (
     <div className="search-books">
@@ -33,12 +63,12 @@ export default function Search({ books, updateBookShelf }) {
           Close
         </Link>
         <div className="search-books-input-wrapper">
-        <input
-                type="text"
-                placeholder="Search by title, author, or ISBN"
-                onChange={(e)=>searchBooks(e.target.value)}
-                value={search}
-              />
+          <input
+            type="text"
+            placeholder="Search by title, author, or ISBN"
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+          />
         </div>
       </div>
       <div className="search-books-results">
@@ -48,6 +78,9 @@ export default function Search({ books, updateBookShelf }) {
               <Book
                 key={book.id}
                 book={book}
+                updateBookShelf={(book, updatedShelf) =>
+                  updateBookCategory(book, updatedShelf)
+                }
               />
             );
           })}
@@ -56,3 +89,8 @@ export default function Search({ books, updateBookShelf }) {
     </div>
   );
 }
+
+Search.propTypes = {
+  books: PropTypes.array.isRequired,
+  updateBookShelf: PropTypes.func.isRequired,
+};

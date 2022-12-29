@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import SearchBooks from "./components/SearchBooks/Search";
 import BookShelves from "./components/Book Shelves/BookShelves";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import { useState, useEffect } from "react";
 
@@ -27,6 +27,9 @@ export default function App() {
         setBooks(updatedBooksShelf);
       }
     };
+    BooksAPI.getAll().then((data) => {
+      setBooks(data);
+    });
     updateBook();
   };
 
@@ -35,6 +38,7 @@ export default function App() {
       <Routes>
         <Route
           path="/"
+          exact
           element={
             <BookShelves
               books={allBooks}
@@ -48,6 +52,7 @@ export default function App() {
       <Routes>
         <Route
           path="/search"
+          exact
           element={
             <SearchBooks
               books={allBooks}
